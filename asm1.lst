@@ -1,0 +1,72 @@
+     1                                  global res
+     2                                  global divd1
+     3                                  global divd2
+     4                                  global divd
+     5                                  global divr
+     6                                  global va
+     7                                  global vb
+     8                                  global vc
+     9                                  
+    10                                  section .bss
+    11 00000000 ????                        res resb 2
+    12 00000002 ????????                    divd resb 4
+    13 00000006 ????                        divr resb 2
+    14 00000008 ????                        va resb 2
+    15 0000000A ????                        vb resb 2
+    16 0000000C ????                        vc resb 2 
+    17                                  section .text
+    18                                  global CMAIN
+    19                                  global SIGN
+    20                                  
+    21                                  SIGN:
+    22 00000000 B800000000                  mov eax, 0
+    23 00000005 BB00000000                  mov ebx, 0
+    24 0000000A B900000000                  mov ecx, 0
+    25 0000000F 31D2                        xor edx, edx
+    26 00000011 8A0425[0C000000]            mov al, [vc]
+    27 00000018 B302                        mov bl, 2
+    28 0000001A F6EB                        imul bl
+    29 0000001C 6683C035                    add ax, 53
+    30 00000020 6683E801                    sub ax, 1
+    31 00000024 66890425[02000000]          mov [divd], ax
+    32 0000002C 668B0425[0A000000]          mov ax, [vb]
+    33 00000034 6698                        cbw
+    34 00000036 662B0425[08000000]          sub ax, [va]
+    35 0000003E 6683C004                    add ax, 4
+    36 00000042 66890425[06000000]          mov [divr], ax
+    37 0000004A 668B0425[02000000]          mov ax, [divd]
+    38 00000052 6699                        cwd
+    39 00000054 668B1C25[06000000]          mov bx, [divr]
+    40 0000005C 66F7FB                      idiv bx
+    41 0000005F 880425[00000000]            mov [res], al
+    42 00000066 C3                          ret
+    43                                      
+    44                                  CMAIN:
+    45 00000067 89E5                        mov ebp, esp; for correct debugging
+    46 00000069 31C0                        xor eax, eax
+    47 0000006B 31DB                        xor ebx, ebx
+    48 0000006D 31C9                        xor ecx, ecx
+    49 0000006F 31D2                        xor edx, edx
+    50 00000071 668B0425[0C000000]          mov ax, [vc]
+    51 00000079 66BB0200                    mov bx, 2
+    52 0000007D 66F7E3                      mul bx
+    53 00000080 6683C035                    add ax, 53
+    54 00000084 6683D200                    adc dx, 0
+    55 00000088 6683E801                    sub ax, 1
+    56 0000008C 6689C1                      mov cx, ax
+    57 0000008F 89D0                        mov eax, edx
+    58 00000091 C1E010                      shl eax, 16
+    59 00000094 01C8                        add eax, ecx
+    60 00000096 890425[02000000]            mov [divd], eax
+    61 0000009D 668B0425[0A000000]          mov ax, [vb]
+    62 000000A5 662B0425[08000000]          sub ax, [va]
+    63 000000AD 6683C004                    add ax, 4
+    64 000000B1 66890425[06000000]          mov [divr], ax
+    65 000000B9 8B0425[02000000]            mov eax, [divd]
+    66 000000C0 8B1C25[06000000]            mov ebx, [divr]
+    67 000000C7 F7F3                        div ebx
+    68 000000C9 890425[00000000]            mov [res], eax
+    69 000000D0 C3                          ret
+    70                                      
+    71                                  
+    72                                  
