@@ -29,9 +29,10 @@ SIGN:
     add ax, 53
     sub ax, 1
     mov [divd], ax
-    mov ax, [vb]
+    mov al, [vb]
     cbw
-    sub ax, [va]
+    mov cx, [va]
+    sub ax, cx
     add ax, 4
     mov [divr], ax
     mov ax, [divd]
